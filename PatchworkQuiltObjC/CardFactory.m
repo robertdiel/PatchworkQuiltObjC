@@ -1,3 +1,11 @@
+//
+//  CardFactory.m
+//  PatchworkQuiltObjC
+//
+//  Created by Robert Diel on 6/8/25.
+//
+
+
 #import "CardFactory.h"
 
 @implementation CardFactory {
@@ -22,21 +30,24 @@
 }
 
 - (void)loadTextures {
-    SKTexture *spriteSheet = [SKTexture textureWithImageNamed:@"card_deck"];
-    int cardWidth = 128;
-    int cardHeight = 96;
+    SKTexture *spriteSheet = [SKTexture textureWithImageNamed:@"cards_spritesheet"];
+    spriteSheet.filteringMode = SKTextureFilteringNearest; // Optional: prevents blur
+
     int columns = 13;
     int rows = 4;
 
-    CGSize sheetSize = spriteSheet.size;
+    CGFloat cardWidth = 1.0 / (CGFloat)columns;
+    CGFloat cardHeight = 1.0 / (CGFloat)rows;
+
     NSMutableArray<SKTexture *> *textures = [NSMutableArray arrayWithCapacity:52];
 
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
-            CGRect rect = CGRectMake((col * cardWidth) / sheetSize.width,
-                                     1.0 - ((row + 1) * cardHeight) / sheetSize.height,
-                                     cardWidth / sheetSize.width,
-                                     cardHeight / sheetSize.height);
+            CGRect rect = CGRectMake(col * cardWidth,
+                                     1.0 - (row + 1) * cardHeight, // SpriteKit texture coords are bottom-left
+                                     cardWidth,
+                                     cardHeight);
+
             SKTexture *cardTexture = [SKTexture textureWithRect:rect inTexture:spriteSheet];
             [textures addObject:cardTexture];
         }
@@ -44,6 +55,7 @@
 
     _cardTextures = [textures copy];
 }
+
 
 - (NSArray<Card *> *)generateDeck {
     NSMutableArray<Card *> *deck = [NSMutableArray arrayWithCapacity:52];

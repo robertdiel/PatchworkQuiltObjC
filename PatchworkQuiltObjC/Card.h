@@ -1,3 +1,11 @@
+	//
+//  Card.h
+//  PatchworkQuiltObjC
+//
+//  Created by Robert Diel on 6/8/25.
+//
+
+
 #import <Foundation/Foundation.h>
 #import <SpriteKit/SpriteKit.h>
 
