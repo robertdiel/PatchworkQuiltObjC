@@ -1,11 +1,12 @@
+////
+////  ViewController.m
+////  PatchworkQuiltObjC
+////
+////  Created by Robert Diel on 6/8/25.
+////
 //
-//  ViewController.m
-//  PatchworkQuiltObjC
-//
-//  Created by Robert Diel on 6/8/25.
-//
-
 #import "ViewController.h"
+#import <SpriteKit/SpriteKit.h>
 #import "GameScene.h"
 
 @implementation ViewController
@@ -13,25 +14,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
-    // including entities and graphs.
-    GKScene *scene = [GKScene sceneWithFileNamed:@"GameScene"];
+    // 1) Grab the SKView
+    SKView *skView = (SKView *)self.view;
+    skView.showsFPS       = YES;
+    skView.showsNodeCount = YES;
+
+    CGSize gameScreenSize = CGSizeMake(1024.0,768.0);
+    // 2) Create your GameScene *in code*, sized to fill the view
+    GameScene *scene = [[GameScene alloc] initWithSize:gameScreenSize];
+
     
-    // Get the SKScene from the loaded GKScene
-    GameScene *sceneNode = (GameScene *)scene.rootNode;
+    // 3) Make the scene’s coordinate system exactly match the view
+    scene.scaleMode   = SKSceneScaleModeResizeFill;
+    scene.anchorPoint = CGPointMake(0, 0);   // (0,0) bottom-left
+
+    // 4) Present it
+    [skView presentScene:scene];
     
-    // Copy gameplay related content over to the scene
-//    sceneNode.entities = [scene.entities mutableCopy];
-//    sceneNode.graphs = [scene.graphs mutableCopy];
-    
-    // Set the scale mode to scale to fit the window
-    sceneNode.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene
-    [self.skView presentScene:sceneNode];
-    
-    self.skView.showsFPS = YES;
-    self.skView.showsNodeCount = YES;
+
+    NSLog(@"Presented a %@ of size %@",
+          NSStringFromClass([scene class]),
+          NSStringFromSize(scene.size));
 }
 
 @end
